@@ -1,0 +1,28 @@
+p{
+	margin: 0px;
+	padding: 0px;
+
+}
+h5{
+	margin: 0px;
+	padding: 0px;
+}
+h3{
+	margin: 0px;
+	padding: 5px;
+	clear: left;
+}
+img{
+	padding: 5px 5px 5px 0px;
+	float: left;
+}
+#news{
+	padding: 15px;
+	width: 20rem;
+	border: 2px solid #e2e2e2;
+	border-radius: 4px;
+	background-color: #F5F5F5;
+}
+#GallenaFeed{
+	padding: 5px;
+}

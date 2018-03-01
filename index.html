@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>RSS Feed Parsing</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/main.css">
+</head>
+<body>
+<div id="news">
+<h1 id="title"></h1>
+<div id="GallenaFeed">
+<script>
+(function() {
+	feedURL = "http://www.gallenauniversity.com/_resources/rss/news.xml";
+	$.ajax({
+	   type: "POST",
+       url: 'getPage.php',
+       //dataType: 'text xml',
+	   data: {url: feedURL},
+	   error: function(xhr, ajaxOptions, thrownError){
+		// will fire when timeout is reached
+		if(thrownError=="timeout") $("#title").html("Timeout: Feed takes more than 5 seconds to load.");
+		else $("#title").html(thrownError);
+		},
+	   success: function(data){
+        //main program
+		var xml = $.parseXML(data);
+		//console.log(data);
+		var feedCount = 0;
+		if($(xml).find("rss").length==0)
+		{
+			$("#title").html("Feed does not exist at the given URL.");
+			return;
+		}
+		else if($(xml).find("item").length==0)
+		{
+			$("#title").html("Feed is empty.");
+			return;
+		}
+		$("#title").html("Headlines");
+		$(xml).find("item").each(function () { 
+			var el = $(this);
+			var divID = "feed" + feedCount;
+			$("<div>").attr("id",divID).appendTo("#GallenaFeed");
+			feedCount++;
+			var title = '<a href="'+el.find("link").text()+'">'+el.find("title").text()+'</a>';
+			var dt = $.datepicker.formatDate( "MM d, yy",($.datepicker.parseDate( "D, dd M yy", el.find("pubDate").text())));
+			var imgURL = el.find("media\\:thumbnail").attr("url");
+			var desc = el.find("description").text();
+			$("<h3>").html(title).appendTo("#"+divID);
+			$("<img>").attr("src",imgURL).appendTo("#"+divID);
+			$("<h5>").html(dt).appendTo("#"+divID);
+			$("<p>").html(desc).appendTo("#"+divID);
+		});	  
+		},
+       timeout: 5000 // sets timeout to 3 seconds
+	});
+})();
+</script>
+</div>
+</div>
+</body>
+</html>
